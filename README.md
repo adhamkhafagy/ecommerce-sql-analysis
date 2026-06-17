@@ -4,7 +4,7 @@ E-Commerce User Behavior &amp; Sales Analysis
 📌 Project Overview
 The goal of this project is to analyze customer behavior and sales performance for an e-commerce platform. Using user event log data, this analysis evaluates the sales funnel, identifies where users drop off, and highlights the most profitable traffic sources and products.
 
-Tools Used: SQL (PostgreSQL/SQLite)
+Tools Used: SQL (PostgreSQL)
 Dataset: user_events.csv (10,000+ rows of event logs including page views, cart additions, checkouts, and purchases).
 
 🔍 Part 1: The E-Commerce Sales Funnel
