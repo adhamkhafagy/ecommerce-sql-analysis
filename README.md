@@ -52,7 +52,7 @@ The dataset contains user event-level logs from an e-commerce platform.
 
 How effectively do users move through the purchasing funnel?
 
-### SQL Server Query
+### SQL Query
 
 ```sql
 SELECT
@@ -63,6 +63,13 @@ FROM events
 GROUP BY event_type
 ORDER BY unique_users DESC;
 ```
+Results
+Event Type	Unique Users	Total Events
+page_view	5000	5000
+add_to_cart	1553	1553
+checkout_start	1103	1103
+payment_info	899	899
+purchase	826	826
 
 ---
 
@@ -72,7 +79,7 @@ ORDER BY unique_users DESC;
 
 Which acquisition channels generate the highest revenue?
 
-### SQL Server Query
+### SQL  Query
 
 ```sql
 SELECT
@@ -94,7 +101,7 @@ ORDER BY total_revenue DESC;
 
 Which products generate the highest revenue?
 
-### SQL Server Query
+### SQL  Query
 
 ```sql
 SELECT TOP 5
@@ -142,6 +149,6 @@ ecommerce-sql-server-analysis/
 
 **Adham Refaat Soliman**
 
-Data Analyst | SQL Server | Power BI | Python
+Data Analyst | SQL | Power BI | Python
 
 This project demonstrates SQL-based business analysis, funnel analytics, revenue reporting, and product performance evaluation using Microsoft SQL Server.
