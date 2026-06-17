@@ -1,2 +1,24 @@
 # ecommerce-sql-analysis
 E-Commerce User Behavior &amp; Sales Analysis
+🛒 Portfolio Project: E-Commerce User Behavior & Sales Analysis
+📌 Project Overview
+The goal of this project is to analyze customer behavior and sales performance for an e-commerce platform. Using user event log data, this analysis evaluates the sales funnel, identifies where users drop off, and highlights the most profitable traffic sources and products.
+
+Tools Used: SQL (PostgreSQL/SQLite)
+Dataset: user_events.csv (10,000+ rows of event logs including page views, cart additions, checkouts, and purchases).
+
+🔍 Part 1: The E-Commerce Sales Funnel
+Business Question: How many users successfully move from viewing a page to making a purchase, and where is the biggest drop-off in the funnel?
+
+💡 Insight
+Overall Conversion: The overall conversion rate from page_view to purchase is 16.5% (826 / 5,000), which is exceptionally healthy for e-commerce.
+
+Largest Drop-off: The most significant drop-off occurs between page_view and add_to_cart, where nearly 69% of users leave without adding anything to their cart. Improving product page engagement or clarity should be a top priority.
+
+💰 Part 2: Revenue by Traffic Source
+Business Question: Which marketing channels are driving the most revenue, and what is the Average Order Value (AOV) per channel?
+
+💡 Insight
+Organic Traffic is the absolute powerhouse of the business, bringing in both the highest number of purchasing users and the most revenue (~$37.2k).
+
+Social Media brings in the fewest users, but has the highest Average Order Value ($111.09). There is an opportunity here to increase ad spend on social channels to attract high-paying customers.
