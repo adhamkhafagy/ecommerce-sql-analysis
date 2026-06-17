@@ -118,9 +118,3 @@ LIMIT 5;
 
 ---
 
-### 🚀 How to publish this to your Portfolio:
-
-1. **GitHub Repository:** Create a new repo called `ecommerce-sql-analysis`.
-2. **README.md:** Copy the text above directly into the `README.md` file. Recruiters love seeing the business questions and insights paired alongside the code.
-3. **Upload the Code:** Save the SQL snippets into a file called `queries.sql` and upload it.
-4. *(Optional but recommended)*: Mention in your intro that you used **CTEs/Aggregations/Grouping** to translate raw event logs into actionable business insights.
