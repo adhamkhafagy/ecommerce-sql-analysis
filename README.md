@@ -9,6 +9,13 @@ Dataset: user_events.csv (10,000+ rows of event logs including page views, cart 
 
 🔍 Part 1: The E-Commerce Sales Funnel
 Business Question: How many users successfully move from viewing a page to making a purchase, and where is the biggest drop-off in the funnel?
+SELECT 
+    event_type, 
+    COUNT(DISTINCT user_id) AS unique_users,
+    COUNT(event_id) AS total_events
+FROM events
+GROUP BY event_type
+ORDER BY unique_users DESC;
 
 💡 Insight
 Overall Conversion: The overall conversion rate from page_view to purchase is 16.5% (826 / 5,000), which is exceptionally healthy for e-commerce.
@@ -18,7 +25,35 @@ Largest Drop-off: The most significant drop-off occurs between page_view and add
 💰 Part 2: Revenue by Traffic Source
 Business Question: Which marketing channels are driving the most revenue, and what is the Average Order Value (AOV) per channel?
 
+SELECT 
+    traffic_source,
+    COUNT(DISTINCT user_id) AS purchasing_users,
+    SUM(amount) AS total_revenue,
+    ROUND(AVG(amount), 2) AS avg_order_value
+FROM events
+WHERE event_type = 'purchase'
+GROUP BY traffic_source
+ORDER BY total_revenue DESC;
+
 💡 Insight
 Organic Traffic is the absolute powerhouse of the business, bringing in both the highest number of purchasing users and the most revenue (~$37.2k).
 
 Social Media brings in the fewest users, but has the highest Average Order Value ($111.09). There is an opportunity here to increase ad spend on social channels to attract high-paying customers.
+
+🏆 Part 3: Top Performing Products
+Business Question: Which individual products are generating the highest total revenue?
+
+SELECT 
+    product_id,
+    COUNT(event_id) AS times_purchased,
+    SUM(amount) AS total_revenue
+FROM events
+WHERE event_type = 'purchase' AND product_id IS NOT NULL
+GROUP BY product_id
+ORDER BY total_revenue DESC
+LIMIT 5;
+
+💡 Insight
+Product 205 and 404 are the top sellers, combining for over $31,000 in revenue.
+
+Sales volume across the top 5 products is quite balanced (ranging between 134 to 147 units sold), showing a healthy product catalog that isn't overly reliant on a single "hero" product.
