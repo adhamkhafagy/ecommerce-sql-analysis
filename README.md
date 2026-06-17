@@ -63,14 +63,14 @@ FROM events
 GROUP BY event_type
 ORDER BY unique_users DESC;
 ```
-Results
+```Results
 Event Type	Unique Users	Total Events
 page_view	5000	5000
 add_to_cart	1553	1553
 checkout_start	1103	1103
 payment_info	899	899
 purchase	826	826
-
+```
 ---
 
 # 💰 2. Revenue by Traffic Source
