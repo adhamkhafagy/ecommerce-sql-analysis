@@ -1,21 +1,27 @@
 
-
----
-
 # 🛒 Portfolio Project: E-Commerce User Behavior & Sales Analysis
 
 ## 📌 Project Overview
 
-The goal of this project is to analyze customer behavior and sales performance for an e-commerce platform. Using user event log data, this analysis evaluates the sales funnel, identifies where users drop off, and highlights the most profitable traffic sources and products.
+The goal of this project is to analyze customer behavior and sales performance for an e-commerce platform. Using user event log data, this analysis evaluates the sales funnel, identifies where users drop off, and highlights the most profitable traffic sources and products to drive strategic business decisions.
 
-**Tools Used:** SQL (PostgreSQL/SQLite)
-**Dataset:** `user_events.csv` (9,000+ rows of event logs including page views, cart additions, checkouts, and purchases).
+## 🛠️ Technologies & Skills Used
+
+* **Database:** SQL (PostgreSQL / SQLite)
+* **Techniques:** Common Table Expressions (CTEs), Window Functions (`LAG`), Aggregations, Data Grouping, Type Casting.
+* **Business Concepts:** Funnel Analysis, Conversion Rate Optimization (CRO), Average Order Value (AOV).
+
+## 📊 Dataset
+
+The analysis is based on a dataset named `user_events.csv`, which contains over 9,000+ rows of event logs representing user interactions on the platform.
+
+* **Key Columns:** `event_id`, `user_id`, `event_type` (page_view, add_to_cart, checkout_start, payment_info, purchase), `traffic_source`, `product_id`, and `amount`.
 
 ---
 
-## 🔍 Part 1: The E-Commerce Sales Funnel
+## 🔍 Phase 1: Overall Sales Funnel Counts
 
-**Business Question:** How many users successfully move from viewing a page to making a purchase, and where is the biggest drop-off in the funnel?
+**Business Question:** How many users successfully move from viewing a page to making a purchase?
 
 ### SQL Query
 
@@ -40,14 +46,58 @@ ORDER BY unique_users DESC;
 | `payment_info` | 899 | 899 |
 | `purchase` | 826 | 826 |
 
-### 💡 Insight
+---
+
+## 📉 Phase 2: Step-by-Step Funnel Conversion Rate
+
+**Business Question:** What is the step-by-step conversion rate, and at which specific transition do we lose the highest percentage of users?
+
+### SQL Query
+
+```sql
+WITH Funnel AS (
+    SELECT 
+        event_type, 
+        COUNT(DISTINCT user_id) AS users,
+        CASE 
+            WHEN event_type = 'page_view' THEN 1
+            WHEN event_type = 'add_to_cart' THEN 2
+            WHEN event_type = 'checkout_start' THEN 3
+            WHEN event_type = 'payment_info' THEN 4
+            WHEN event_type = 'purchase' THEN 5
+        END AS step_order
+    FROM events
+    GROUP BY event_type
+)
+SELECT 
+    event_type AS funnel_step,
+    users AS current_users,
+    LAG(users) OVER(ORDER BY step_order) AS previous_step_users,
+    ROUND((users * 100.0) / LAG(users) OVER(ORDER BY step_order), 2) AS step_conversion_pct
+FROM Funnel
+ORDER BY step_order;
+
+```
+
+### Results
+
+| Funnel Step | Current Users | Previous Step Users | Step Conversion Rate (%) |
+| --- | --- | --- | --- |
+| `page_view` | 5,000 | *NULL* | *NULL* |
+| `add_to_cart` | 1,553 | 5,000 | **31.06%** |
+| `checkout_start` | 1,103 | 1,553 | **71.02%** |
+| `payment_info` | 899 | 1,103 | **81.50%** |
+| `purchase` | 826 | 899 | **91.88%** |
+
+### 💡 Phase 1 & 2 Insights
 
 * **Overall Conversion:** The overall conversion rate from `page_view` to `purchase` is **16.5%** (826 / 5,000), which is exceptionally healthy for e-commerce.
-* **Largest Drop-off:** The most significant drop-off occurs between `page_view` and `add_to_cart`, where nearly **69%** of users leave without adding anything to their cart. Improving product page engagement or clarity should be a top priority.
+* **High Bottom-Funnel Intent:** Once a user adds an item to their cart, conversion rates are strong. 71% proceed to checkout, and an impressive **91.8%** of users who enter their payment info successfully complete the purchase. This indicates the checkout UI is smooth and largely free of friction.
+* **Top-of-Funnel Bottleneck:** The single biggest leak in the funnel is between viewing a product and adding it to the cart, with only **31.06%** of users making the jump.
 
 ---
 
-## 💰 Part 2: Revenue by Traffic Source
+## 💰 Phase 3: Revenue by Traffic Source
 
 **Business Question:** Which marketing channels are driving the most revenue, and what is the Average Order Value (AOV) per channel?
 
@@ -78,11 +128,11 @@ ORDER BY total_revenue DESC;
 ### 💡 Insight
 
 * **Organic Traffic** is the absolute powerhouse of the business, bringing in both the highest number of purchasing users and the most revenue (~$37.2k).
-* **Social Media** brings in the fewest users, but has the **highest Average Order Value ($111.09)**. There is an opportunity here to increase ad spend on social channels to attract high-paying customers.
+* **Social Media** brings in the fewest users but has the **highest Average Order Value ($111.09)**.
 
 ---
 
-## 🏆 Part 3: Top Performing Products
+## 🏆 Phase 4: Top Performing Products
 
 **Business Question:** Which individual products are generating the highest total revenue?
 
@@ -113,21 +163,28 @@ LIMIT 5;
 
 ### 💡 Insight
 
-* **Product 205 and 404** are the top sellers, combining for over $31,000 in revenue.
-* Sales volume across the top 5 products is quite balanced (ranging between 134 to 147 units sold), showing a healthy product catalog that isn't overly reliant on a single "hero" product.
-
-Adding a strategic conclusion is an excellent idea. Hiring managers and stakeholders don't just want to see that you can write SQL; they want to see that you can translate data into actionable business decisions.
-
-Here is a **Conclusion & Strategic Recommendations** section you can copy and paste directly at the bottom of your `README.md` file, right after Part 3.
+* **Products 205 and 404** are the top sellers, combining for over $31,000 in revenue.
+* Sales volume across the top 5 products is quite balanced, showing a healthy product catalog that isn't overly reliant on a single "hero" product.
 
 ---
 
 ## 🎯 Conclusion & Strategic Recommendations
 
-Based on the analysis of the user funnel, traffic sources, and product performance, here are the key recommendations to improve overall e-commerce performance:
+Based on the analysis of the user funnel, traffic sources, and product performance, here are the key recommendations to improve overall e-commerce metrics:
 
-* **Optimize the Product Discovery Phase:** The largest bottleneck in the funnel is the 69% drop-off between viewing a page and adding an item to the cart. The business should A/B test product page layouts, improve product imagery, prominently display customer reviews, or offer a temporary "first-time buyer" discount to incentivize that initial cart addition.
-* **Scale Social Media Marketing:** While Organic traffic drives the highest volume, Social Media drives the highest Average Order Value ($111.09). Reallocating a portion of the marketing budget to targeted social media campaigns (e.g., Instagram, TikTok) could effectively attract more of these high-value customers.
-* **Leverage Top-Selling Products for Upselling:** Products 205 and 404 are consistent top-performers. The business should use these as "anchor" products by featuring them on the landing page or creating "Frequently Bought Together" bundles with lower-performing items to increase overall cart sizes.
-* **Investigate Cart-to-Checkout Friction:** Although the 16.5% overall conversion rate is strong, there is still an opportunity to reduce friction between the cart and the final purchase. Implementing a one-click checkout or guest checkout option could help convert the remaining users who abandon their carts.
+1. **Optimize the Product Discovery Phase:** The largest bottleneck in the funnel is the 69% drop-off between viewing a page and adding an item to the cart. The business should A/B test product page layouts, improve product imagery, prominently display customer reviews, or offer a temporary "first-time buyer" discount to incentivize that initial cart addition.
+2. **Scale Social Media Marketing:** While Organic traffic drives the highest volume, Social Media drives the highest Average Order Value ($111.09). Reallocating a portion of the marketing budget to targeted social media campaigns (e.g., Instagram, TikTok) could effectively attract more high-value customers.
+3. **Leverage Top-Selling Products for Upselling:** Products 205 and 404 are consistent top-performers. The business should use these as "anchor" products by featuring them on the landing page or creating "Frequently Bought Together" bundles with lower-performing items to increase overall cart sizes.
 
+---
+
+## 💻 How to Run This Project
+
+1. Clone the repository to your local machine.
+2. Ensure you have a SQL environment set up (e.g., PostgreSQL, MySQL, or DB Browser for SQLite).
+3. Import `user_events.csv` into a new table named `events`.
+4. Run the queries provided in `queries.sql` to replicate the analysis.
+
+---
+
+Would you like me to write out the `CREATE TABLE` and `INSERT` schema SQL commands so anyone reviewing your portfolio can instantly build the database and test your queries?
