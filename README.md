@@ -178,13 +178,4 @@ Based on the analysis of the user funnel, traffic sources, and product performan
 
 ---
 
-## 💻 How to Run This Project
 
-1. Clone the repository to your local machine.
-2. Ensure you have a SQL environment set up (e.g., PostgreSQL, MySQL, or DB Browser for SQLite).
-3. Import `user_events.csv` into a new table named `events`.
-4. Run the queries provided in `queries.sql` to replicate the analysis.
-
----
-
-Would you like me to write out the `CREATE TABLE` and `INSERT` schema SQL commands so anyone reviewing your portfolio can instantly build the database and test your queries?
